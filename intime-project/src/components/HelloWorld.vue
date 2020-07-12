@@ -2,57 +2,211 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
+      Here you can find all the elements that you are
+      gonna need for creating the Intime webpage.
     </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+    <br />
+    <!-- ------------------ -->
+    <p class="titoli">Progress Bar</p>
+    <div class="progress">
+      <div
+        class="progress-bar"
+        role="progressbar"
+        style="width: 25%"
+        aria-valuenow="25"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      ></div>
+    </div>
+    <br />
+    <!-- ------------------- -->
+    <p class="titoli">Hamburger Menu</p>
+    <a href="#">
+      <div class="hamburger"></div>
+      <div class="hamburger"></div>
+      <div class="hamburger"></div>
+    </a>
+    <br />
+    <!-- ------------------- -->
+    <p class="titoli">Dropdown Menu</p>
+    <div>
+      <b-dropdown id="dropdown-1" text="Menu" class="m-md-2">
+        <b-dropdown-item>First Action</b-dropdown-item>
+        <b-dropdown-item>Second Action</b-dropdown-item>
+        <b-dropdown-item>Third Action</b-dropdown-item>
+        <b-dropdown-divider></b-dropdown-divider>
+        <b-dropdown-item active>Active action</b-dropdown-item>
+        <b-dropdown-item disabled>Disabled action</b-dropdown-item>
+      </b-dropdown>
+    </div>
+    <br />
+    <!-- ----------------------- -->
+    <p class="titoli">Accordion</p>
+    <!-- accordion that works -->
+    <div role="tablist">
+      <!-- inizio for -->
+      <span>{{currentCategory}}</span>
+      <b-card no-body class="mb-1">
+        <b-card-header header-tag="header" class="p-1" role="tab">
+          <b-button
+            block
+            v-b-toggle.accordion-1
+            variant="info"
+            v-on:click="setCategory('Arts')"
+          >Arts</b-button>
+        </b-card-header>
+        <b-collapse id="accordion-1" accordion="my-accordion" role="tabpanel">
+          <b-card-body>
+            <b-card-text>Category Arts</b-card-text>
+          </b-card-body>
+        </b-collapse>
+      </b-card>
+      <!-- fine for -->
+
+      <b-card no-body class="mb-1">
+        <b-card-header header-tag="header" class="p-1" role="tab">
+          <b-button
+            block
+            v-b-toggle.accordion-sport
+            variant="info"
+            v-on:click="setCategory('sport')"
+          >Sport</b-button>
+        </b-card-header>
+        <b-collapse id="accordion-sport" accordion="my-accordion" role="tabpanel">
+          <b-card-body>
+            <b-card-text>category sport</b-card-text>
+          </b-card-body>
+        </b-collapse>
+      </b-card>
+
+      <b-card no-body class="mb-1">
+        <b-card-header header-tag="header" class="p-1" role="tab">
+          <b-button
+            block
+            v-b-toggle.accordion-3
+            variant="info"
+            v-on:click="setCategory('Business')"
+          >Business</b-button>
+        </b-card-header>
+        <b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
+          <b-card-body>
+            <b-card-text>Category Business</b-card-text>
+          </b-card-body>
+        </b-collapse>
+      </b-card>
+    </div>
+
+    <!-- ----------------------- -->
+    <p class="titoli">Wizard</p>
+    <div class="wizard" v-if="firstTime === true">
+      <p v-if="step === 0">First time visiting!</p>
+      <p v-if="step === 1">Step 1</p>
+      <p v-if="step === 2">Step 2</p>
+      <button v-on:click="counter">Let's start</button>
+    </div>
+    <br>
+
+    <!-- pill with x -->
+    <p class="titoli">Tags</p>
+    <b-button variant="success" v-on:click="selectKeyword('aaaa')">Button
+    Cat 1
+      <b-button type="button" class="close" aria-label="Close" v-on:click.stop="removeKeyword('bbbb')">
+        <span aria-hidden="true"  >×</span>
+      </b-button>
+    </b-button>
+    <br>
+    <br>
+
+    <!-- -------------- -->
+    <p class="titoli">Side Menu</p>
+    <div class="container" v-if="menu"></div>
+    <a href="#" v-on:click="openClose()">
+    <div class="sideButton">>></div>
+    </a>
+    <br>
+    <br>
+    <!-- --------------- -->
+    <p class="titoli">Search Bar</p>
+    <input type="search" class="search" placeholder="Search...">
+
+
+    
+
+
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: "HelloWorld",
   props: {
     msg: String
-  }
-}
+  },
+  data() {
+    return {
+      currentCategory: "",
+      firstTime: true,
+      step: 0,
+      menu: false,
+    };
+  },
+  methods: {
+    setCategory: function(categoryName) {
+      this.currentCategory = categoryName;
+    },
+    counter: function() {
+      this.step += 1;
+    },
+    removeKeyword: function(keywordName) {
+      alert(keywordName); 
+    },
+    selectKeyword: function(keywordName) {
+      alert(keywordName); 
+    },
+    openClose: function() {
+      if(this.menu === false) {
+        this.menu = true;
+      } else {
+        this.menu = false;
+      }
+    }
+  } 
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+.titoli {
+  font-weight: bold;
+  font-size: 20px;
+  text-align: center;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+.progress {
+  width: 75%;
+  margin: auto;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+.hamburger {
+  width: 35px;
+  height: 5px;
+  background-color: black;
+  margin: 6px auto;
 }
-a {
-  color: #42b983;
+.container {
+  background: grey;
+  height: 500px;
+  float: left;
 }
+.sideButton {
+  background: red;
+  height: 30px;
+  width: 70px;
+  float: left;
+}
+.search {
+  width: 170px;
+  margin: 30px auto;
+  border: none;
+  border-bottom: blue 1px solid;
+}
+
 </style>
