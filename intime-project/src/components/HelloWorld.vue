@@ -6,6 +6,15 @@
       gonna need for creating the Intime webpage.
     </p>
     <br />
+    <p class="titoli">Side Menu</p>
+    <div class="container" v-if="menu"></div>
+    <a href="#" v-on:click="openClose()">
+      <div class="h2 mb-0">
+        <b-icon icon="chevron-double-right"></b-icon>
+      </div>
+    </a>
+    <br>
+    <br>
     <!-- ------------------ -->
     <p class="titoli">Progress Bar</p>
     <div class="progress">
@@ -20,26 +29,7 @@
     </div>
     <br />
     <!-- ------------------- -->
-    <p class="titoli">Hamburger Menu</p>
-    <a href="#">
-      <div class="hamburger"></div>
-      <div class="hamburger"></div>
-      <div class="hamburger"></div>
-    </a>
-    <br />
-    <!-- ------------------- -->
-    <p class="titoli">Dropdown Menu</p>
-    <div>
-      <b-dropdown id="dropdown-1" text="Menu" class="m-md-2">
-        <b-dropdown-item>First Action</b-dropdown-item>
-        <b-dropdown-item>Second Action</b-dropdown-item>
-        <b-dropdown-item>Third Action</b-dropdown-item>
-        <b-dropdown-divider></b-dropdown-divider>
-        <b-dropdown-item active>Active action</b-dropdown-item>
-        <b-dropdown-item disabled>Disabled action</b-dropdown-item>
-      </b-dropdown>
-    </div>
-    <br />
+    <Hamburger></Hamburger>
     <!-- ----------------------- -->
     <p class="titoli">Accordion</p>
     <!-- accordion that works -->
@@ -107,25 +97,21 @@
     <br>
 
     <!-- pill with x -->
+    <div class="tags">
     <p class="titoli">Tags</p>
-    <b-button variant="success" v-on:click="selectKeyword('aaaa')">Button
+    <b-button variant="success" v-on:click="selectKeyword('aaaa')" >Button
     Cat 1
       <b-button type="button" class="close" aria-label="Close" v-on:click.stop="removeKeyword('bbbb')">
         <span aria-hidden="true"  >×</span>
       </b-button>
     </b-button>
+    </div>
     <br>
     <br>
 
     <!-- -------------- -->
-    <p class="titoli">Side Menu</p>
-    <div class="container" v-if="menu"></div>
-    <a href="#" v-on:click="openClose()">
-    <div class="sideButton">>></div>
-    </a>
-    <br>
-    <br>
     <!-- --------------- -->
+
     <p class="titoli">Search Bar</p>
     <input type="search" class="search" placeholder="Search...">
 
@@ -137,8 +123,14 @@
 </template>
 
 <script>
+
+import Hamburger from './Hamburger.vue'
+
 export default {
   name: "HelloWorld",
+  components: {
+    Hamburger
+  },
   props: {
     msg: String
   },
@@ -185,21 +177,10 @@ export default {
   width: 75%;
   margin: auto;
 }
-.hamburger {
-  width: 35px;
-  height: 5px;
-  background-color: black;
-  margin: 6px auto;
-}
 .container {
   background: grey;
-  height: 500px;
-  float: left;
-}
-.sideButton {
-  background: red;
-  height: 30px;
-  width: 70px;
+  height: 100vh;
+  width: 400px;
   float: left;
 }
 .search {
@@ -207,6 +188,12 @@ export default {
   margin: 30px auto;
   border: none;
   border-bottom: blue 1px solid;
+}
+.wizard {
+  text-align: center;
+}
+.tags {
+  text-align: center;
 }
 
 </style>
