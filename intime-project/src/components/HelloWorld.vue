@@ -13,8 +13,8 @@
         <b-icon icon="chevron-double-right"></b-icon>
       </div>
     </a>
-    <br>
-    <br>
+    <br />
+    <br />
     <!-- ------------------ -->
     <p class="titoli">Progress Bar</p>
     <div class="progress">
@@ -94,37 +94,37 @@
       <p v-if="step === 2">Step 2</p>
       <button v-on:click="counter">Let's start</button>
     </div>
-    <br>
+    <br />
 
     <!-- pill with x -->
     <div class="tags">
-    <p class="titoli">Tags</p>
-    <b-button variant="success" v-on:click="selectKeyword('aaaa')" >Button
-    Cat 1
-      <b-button type="button" class="close" aria-label="Close" v-on:click.stop="removeKeyword('bbbb')">
-        <span aria-hidden="true"  >×</span>
+      <p class="titoli">Tags</p>
+      <b-button variant="success" v-on:click="selectKeyword('aaaa')">
+        Button
+        Cat 1
+        <b-button
+          type="button"
+          class="close"
+          aria-label="Close"
+          v-on:click.stop="removeKeyword('bbbb')"
+        >
+          <span aria-hidden="true">×</span>
+        </b-button>
       </b-button>
-    </b-button>
     </div>
-    <br>
-    <br>
+    <br />
+    <br />
 
     <!-- -------------- -->
     <!-- --------------- -->
 
     <p class="titoli">Search Bar</p>
-    <input type="search" class="search" placeholder="Search...">
-
-
-    
-
-
+    <input type="search" class="search" placeholder="Search..." />
   </div>
 </template>
 
 <script>
-
-import Hamburger from './Hamburger.vue'
+import Hamburger from "./Hamburger.vue";
 
 export default {
   name: "HelloWorld",
@@ -139,7 +139,7 @@ export default {
       currentCategory: "",
       firstTime: true,
       step: 0,
-      menu: false,
+      menu: false
     };
   },
   methods: {
@@ -150,19 +150,19 @@ export default {
       this.step += 1;
     },
     removeKeyword: function(keywordName) {
-      alert(keywordName); 
+      alert(keywordName);
     },
     selectKeyword: function(keywordName) {
-      alert(keywordName); 
+      alert(keywordName);
     },
     openClose: function() {
-      if(this.menu === false) {
+      if (this.menu === false) {
         this.menu = true;
       } else {
         this.menu = false;
       }
     }
-  } 
+  }
 };
 </script>
 
@@ -195,5 +195,4 @@ export default {
 .tags {
   text-align: center;
 }
-
 </style>
