@@ -1,6 +1,6 @@
 <template>
   <b-row>
-    <b-col cols="2">
+    <b-col cols="2" class>
       <a href="#" v-on:click="openClose()">
         <div class="h2 mb-0">
           <b-icon icon="chevron-double-left"></b-icon>
@@ -20,11 +20,25 @@
           <div role="tablist">
             <b-card no-body class="mb-1">
               <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-button block v-b-toggle.accordion-1 variant="info">Arts</b-button>
+                <b-button
+                  block
+                  v-b-toggle.accordion-3
+                  variant="info"
+                  class="d-flex justify-content-start"
+                >
+                  Arts
+                  <b-col class="d-flex justify-content-center">
+                    <b-badge pill variant="warning">2</b-badge>
+                  </b-col>
+                  <b-col>
+                    <span class="h5 mr-5">
+                      <b-icon icon="arrow-down-short"></b-icon>
+                    </span>
+                  </b-col>
+                </b-button>
               </b-card-header>
-              <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
+              <b-collapse id="accordion-3" accordion="my-accordion-3" role="tabpanel">
                 <b-card-body>
-                  <b-card-text>I start opened because visible is true</b-card-text>
                   <b-card-text>text</b-card-text>
                 </b-card-body>
               </b-collapse>
@@ -32,9 +46,24 @@
 
             <b-card no-body class="mb-1">
               <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-button block v-b-toggle.accordion-2 variant="info">Business</b-button>
+                <b-button
+                  block
+                  v-b-toggle.accordion-4
+                  variant="info"
+                  class="d-flex justify-content-start"
+                >
+                  Business
+                  <b-col class="d-flex justify-content-center">
+                    <b-badge pill variant="warning">2</b-badge>
+                  </b-col>
+                  <b-col class="d-flex justify-content-end">
+                    <span class="h5 mr-5">
+                      <b-icon icon="arrow-down-short"></b-icon>
+                    </span>
+                  </b-col>
+                </b-button>
               </b-card-header>
-              <b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
+              <b-collapse id="accordion-4" accordion="my-accordion-4" role="tabpanel">
                 <b-card-body>
                   <b-card-text>text</b-card-text>
                 </b-card-body>
@@ -43,11 +72,30 @@
 
             <b-card no-body class="mb-1">
               <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-button block v-b-toggle.accordion-3 variant="info">Sport</b-button>
+                <b-button
+                  block
+                  v-b-toggle.accordion-5
+                  variant="info"
+                  class="d-flex justify-content-start"
+                >
+                  Sport
+                  <b-col class="d-flex justify-content-center">
+                    <b-badge pill variant="secondary">-</b-badge>
+                  </b-col>
+                  <b-col class="d-flex justify-content-end">
+                    <span class="h5">
+                      <b-icon icon="arrow-down-short"></b-icon>
+                    </span>
+                  </b-col>
+                </b-button>
               </b-card-header>
-              <b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
+              <b-collapse id="accordion-5" accordion="my-accordion-5" role="tabpanel">
                 <b-card-body>
-                  <b-card-text>text</b-card-text>
+                  <b-card-text>
+                    <div v-if="empty">
+                      <p>No article available</p>
+                    </div>
+                  </b-card-text>
                 </b-card-body>
               </b-collapse>
             </b-card>
@@ -65,7 +113,8 @@ export default {
   props: {},
   data() {
     return {
-      sxMenu: false
+      sxMenu: false,
+      empty: true
     };
   },
   methods: {
