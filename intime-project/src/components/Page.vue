@@ -4,18 +4,21 @@
     <b-row>
       <b-col cols="3" class="text-center">
         <leftMenu
+          ref="leftMenu"
           v-bind:activeCategories="activeCategories"
           v-on:category-toggled-event="onToggleCategory"
+          v-bind:activeKeywords="activeKeywords"
+          v-on:keyword-toggled-event="onToggleKeyword"
         ></leftMenu>
       </b-col>
 
       <b-col cols="6">
         <div class="d-flex justify-content-center">
           <b-form-input v-model="search" placeholder="Search" class="mt-3"></b-form-input>
-          <b-button variant="light" class="h4 m-3">
+          <b-button variant="light" class="h4 m-3" v-on:click="onSearch()">
             <b-icon icon="search"></b-icon>
           </b-button>
-          <b-button variant="light" class="h4 m-3">
+          <b-button variant="light" class="h4 m-3" v-on:click="onSaveKeyword()">
             <b-icon icon="star"></b-icon>
           </b-button>
         </div>
@@ -128,15 +131,58 @@ export default {
             "President Trump and his top aides sharply shifted their pandemic strategy in mid-April after seizing on optimistic data suggesting the virus would disappear, a Times investigation found.",
         },
       ],
-      activeCategories: [],
+      // ternary operator =>> (condizione) ? se-vero : se-falso
+      activeCategories: localStorage.getItem("activeCategories")
+        ? localStorage.getItem("activeCategories").split(",")
+        : ["home"],
+      activeKeywords: [],
       results: getFromApi(),
     };
   },
   methods: {
-    onToggleCategory: function (category) {
-      alert("page.vue: " + category);
-      // this.syncArticles();
+    onSearch: function () {
+      // TODO: current text is in >> this.search
     },
+
+    onSaveKeyword: function () {
+      this.$refs.leftMenu.saveKeyword(this.search);
+    },
+
+    onToggleCategory: function (category) {
+      var wasActive = this.activeCategories.includes(category);
+      if (wasActive) {
+        // then it should be removed
+        this.activeCategories = this.activeCategories.filter(
+          (activeCategory) => activeCategory !== category
+        );
+      } else {
+        // we can add it
+        this.activeCategories = [...this.activeCategories, category];
+      }
+
+      localStorage.setItem("activeCategories", this.activeCategories);
+
+      var xxxx = localStorage.getItem("activeCategories");
+      console.log(xxxx);
+
+      this.syncArticles();
+    },
+
+    onToggleKeyword: function (keyword) {
+      var wasActive = this.activeKeywords.includes(keyword);
+      if (wasActive) {
+        // then it should be removed
+        this.activeKeywords = this.activeKeywords.filter(
+          (activeKeyword) => activeKeyword !== keyword
+        );
+      } else {
+        // we can add it
+        this.activeKeywords = [...this.activeKeywords, keyword];
+      }
+
+      this.syncArticles();
+    },
+
     syncArticles: function () {
       // qui devo popolare l'array degli articoli da visualizzare nella pagina centrale
       // in base alle categorie selezionate e alle keywords attive

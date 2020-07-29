@@ -10,12 +10,12 @@ export default {
   name: "Toggle",
   components: {},
   props: {
-    state: Boolean
+    state: Boolean,
   },
   data() {
     return {};
   },
-  methods: {}
+  methods: {},
 };
 </script>
 

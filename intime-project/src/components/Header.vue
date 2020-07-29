@@ -5,7 +5,7 @@
     </b-col>
 
     <b-col cols="6" class="text-center">
-      <h1>In.Time</h1>
+      <h1 class="title">In.Time</h1>
     </b-col>
 
     <b-col cols="3" class="d-flex align-content-center flex-wrap d-flex justify-content-center">
@@ -27,13 +27,13 @@ import Hamburger from "./Hamburger.vue";
 export default {
   name: "Header",
   components: {
-    Hamburger
+    Hamburger,
   },
   props: {},
   data() {
     return {};
   },
-  methods: {}
+  methods: {},
 };
 </script>
 
@@ -41,5 +41,9 @@ export default {
 <style scoped>
 .header {
   background-color: #e0e0e0;
+}
+.title {
+  font-size: 30px;
+  margin-top: 8px;
 }
 </style>

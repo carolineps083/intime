@@ -11,7 +11,7 @@
               <b-card-header header-tag="header" class="p-1" role="tab">
                 <b-button block v-b-toggle.accordion-1 variant="info">
                   Keywords
-                  <b-badge pill variant="warning">2</b-badge>
+                  <b-badge pill variant="warning">{{ keywords.length }}</b-badge>
                   <span class="h5 ml-5">
                     <b-icon icon="arrow-down-short"></b-icon>
                   </span>
@@ -19,29 +19,22 @@
               </b-card-header>
               <b-collapse visible id="accordion-1" accordion="my-accordion-1" role="tabpanel">
                 <b-card-body class="d-flex justify-content-start">
-                  <b-card-text>
-                    <b-button variant="outline-primary" v-on:click="selectKeyword()" class="mr-1">
+                  <b-card-text v-for="keyword in keywords" v-bind:key="keyword">
+                    <b-button
+                      variant="outline-primary"
+                      v-bind:class="{ active: isKeywordActive(keyword) }"
+                      v-on:click="selectKeyword(keyword)"
+                      class="mr-1"
+                    >
                       <b-button
                         type="button"
                         class="close"
                         aria-label="Close"
-                        v-on:click.stop="cancelKeyword()"
+                        v-on:click.stop="cancelKeyword(keyword)"
                       >
                         <span aria-hidden="true">×</span>
-                      </b-button>badge 1
-                    </b-button>
-                  </b-card-text>
-
-                  <b-card-text>
-                    <b-button variant="outline-primary" v-on:click="selectKeyword()" class="mr-1">
-                      <b-button
-                        type="button"
-                        class="close"
-                        aria-label="Close"
-                        v-on:click.stop="cancelKeyword()"
-                      >
-                        <span aria-hidden="true">×</span>
-                      </b-button>badge 2
+                      </b-button>
+                      {{ keyword }}
                     </b-button>
                   </b-card-text>
                 </b-card-body>
@@ -66,23 +59,16 @@
               </b-card-header>
               <b-collapse visible id="accordion-2" accordion="my-accordion-2" role="tabpanel">
                 <b-card-body>
-                  <b-card-text v-for="category in categories" v-bind:key="category.id">
-                    <!-- inizio for each category-->
-                    <!-- <template v-for="category in categories">
-                    
-                      <div :state="isCategoryActive(category)" @click.native="onToggleCategory(category)">{{category}}</div>
-                      </template>
-                    -->
+                  <b-card-text class="mb-0" v-for="category in categories" v-bind:key="category">
                     <b-row>
                       <b-col cols="8" class="d-flex justify-content-start .d-block">{{category}}</b-col>
                       <b-col cols="4">
                         <Toggle
-                          :state="isCategoryActive(category)"
-                          @v-on:click="onToggleCategory(category)"
+                          v-bind:state="isCategoryActive(category)"
+                          v-on:click.native="onToggleCategory(category)"
                         ></Toggle>
                       </b-col>
                     </b-row>
-                    <!-- fine for each -->
                   </b-card-text>
                 </b-card-body>
               </b-collapse>
@@ -111,31 +97,71 @@ export default {
   },
   props: {
     activeCategories: Array,
+    activeKeywords: Array,
   },
   data() {
     return {
       sxMenu: false,
       keywords: [],
+      categories: [
+        "arts",
+        "automobiles",
+        "books",
+        "business",
+        "fashion",
+        "food",
+        "health",
+        "home",
+        "insider",
+        "magazine",
+        "movies",
+        "nyregion",
+        "obituaries",
+        "opinion",
+        "politics",
+        "realestate",
+        "science",
+        "sports",
+        "sundayreview",
+        "technology",
+        "theater",
+        "t-magazine",
+        "travel",
+        "upshot",
+        "us",
+        "world",
+      ],
     };
   },
   methods: {
-    selectKeyword: function () {
-      alert("paparino");
+    // Obs. external reference
+    saveKeyword: function (keyword) {
+      var exists = this.keywords.includes(keyword);
+      if (exists) {
+        return;
+      }
+
+      this.keywords = [...this.keywords, keyword];
     },
-    cancelKeyword: function () {
-      alert("mammamia");
+    selectKeyword: function (keyword) {
+      this.$emit("keyword-toggled-event", keyword);
     },
+    cancelKeyword: function (keyword) {
+      this.keywords = this.keywords.filter((k) => k !== keyword);
+    },
+    isKeywordActive(keyword) {
+      var isActive = this.activeKeywords.includes(keyword);
+      return isActive;
+    },
+
     onToggleCategory(category) {
-      // passare a component centrale che si è fatto il toggle della categoria
-      // this.categoryActive = !this.categoryActive;
       this.$emit("category-toggled-event", category);
     },
     isCategoryActive(category) {
-      // ??? se la voce category è contenuta nell'array di activeCategories, allora true,
-      // altrimenti false
-      this.activeCategories.includes(category);
-      return category == category;
+      var isActive = this.activeCategories.includes(category);
+      return isActive;
     },
+
     openClose: function () {
       if (this.sxMenu === false) {
         this.sxMenu = true;
