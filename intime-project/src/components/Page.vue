@@ -87,7 +87,7 @@
       </b-col>
 
       <b-col cols="3">
-        <rightMenu></rightMenu>
+        <rightMenu v-bind:activeCategories="activeCategories"></rightMenu>
       </b-col>
     </b-row>
   </b-container>

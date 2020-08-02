@@ -18,12 +18,12 @@
       <b-row>
         <b-col>
           <div role="tablist">
-            <b-card no-body class="mb-1">
+            <b-card no-body class="mb-1" v-for="category in activeCategories" v-bind:key="category">
               <b-card-header header-tag="header" class="p-1" role="tab">
                 <b-button block v-b-toggle.accordion-3 variant="info">
                   <b-row>
                     <b-col cols="7">
-                      Arts
+                      {{ category }}
                       <b-badge pill variant="warning" class="ml-1">2</b-badge>
                     </b-col>
                     <b-col cols="5">
@@ -40,52 +40,6 @@
                 </b-card-body>
               </b-collapse>
             </b-card>
-
-            <b-card no-body class="mb-1">
-              <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-button block v-b-toggle.accordion-4 variant="info">
-                  <b-row>
-                    <b-col cols="7">
-                      Sports
-                      <b-badge pill variant="warning" class="ml-1">2</b-badge>
-                    </b-col>
-                    <b-col cols="5">
-                      <span class="h5 mr-5">
-                        <b-icon icon="arrow-down-short" class="ml-5"></b-icon>
-                      </span>
-                    </b-col>
-                  </b-row>
-                </b-button>
-              </b-card-header>
-              <b-collapse id="accordion-4" accordion="my-accordion-4" role="tabpanel">
-                <b-card-body>
-                  <b-card-text>text</b-card-text>
-                </b-card-body>
-              </b-collapse>
-            </b-card>
-
-            <b-card no-body class="mb-1">
-              <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-button block v-b-toggle.accordion-5 variant="info">
-                  <b-row>
-                    <b-col cols="7">
-                      Business
-                      <b-badge pill variant="warning" class="ml-1">2</b-badge>
-                    </b-col>
-                    <b-col cols="5">
-                      <span class="h5 mr-5">
-                        <b-icon icon="arrow-down-short" class="ml-5"></b-icon>
-                      </span>
-                    </b-col>
-                  </b-row>
-                </b-button>
-              </b-card-header>
-              <b-collapse id="accordion-5" accordion="my-accordion-5" role="tabpanel">
-                <b-card-body>
-                  <b-card-text>text</b-card-text>
-                </b-card-body>
-              </b-collapse>
-            </b-card>
           </div>
         </b-col>
       </b-row>
@@ -97,7 +51,9 @@
 export default {
   name: "rightMenu",
   components: {},
-  props: {},
+  props: {
+    activeCategories: Array,
+  },
   data() {
     return {
       sxMenu: false,
