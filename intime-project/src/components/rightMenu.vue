@@ -20,21 +20,18 @@
           <div role="tablist">
             <b-card no-body class="mb-1">
               <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-button
-                  block
-                  v-b-toggle.accordion-3
-                  variant="info"
-                  class="d-flex justify-content-start"
-                >
-                  Arts
-                  <b-col class="d-flex justify-content-center">
-                    <b-badge pill variant="warning">2</b-badge>
-                  </b-col>
-                  <b-col>
-                    <span class="h5 mr-5">
-                      <b-icon icon="arrow-down-short"></b-icon>
-                    </span>
-                  </b-col>
+                <b-button block v-b-toggle.accordion-3 variant="info">
+                  <b-row>
+                    <b-col cols="7">
+                      Arts
+                      <b-badge pill variant="warning" class="ml-1">2</b-badge>
+                    </b-col>
+                    <b-col cols="5">
+                      <span class="h5 mr-5">
+                        <b-icon icon="arrow-down-short" class="ml-5"></b-icon>
+                      </span>
+                    </b-col>
+                  </b-row>
                 </b-button>
               </b-card-header>
               <b-collapse id="accordion-3" accordion="my-accordion-3" role="tabpanel">
@@ -46,21 +43,18 @@
 
             <b-card no-body class="mb-1">
               <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-button
-                  block
-                  v-b-toggle.accordion-4
-                  variant="info"
-                  class="d-flex justify-content-start"
-                >
-                  Business
-                  <b-col class="d-flex justify-content-center">
-                    <b-badge pill variant="warning">2</b-badge>
-                  </b-col>
-                  <b-col class="d-flex justify-content-end">
-                    <span class="h5 mr-5">
-                      <b-icon icon="arrow-down-short"></b-icon>
-                    </span>
-                  </b-col>
+                <b-button block v-b-toggle.accordion-4 variant="info">
+                  <b-row>
+                    <b-col cols="7">
+                      Sports
+                      <b-badge pill variant="warning" class="ml-1">2</b-badge>
+                    </b-col>
+                    <b-col cols="5">
+                      <span class="h5 mr-5">
+                        <b-icon icon="arrow-down-short" class="ml-5"></b-icon>
+                      </span>
+                    </b-col>
+                  </b-row>
                 </b-button>
               </b-card-header>
               <b-collapse id="accordion-4" accordion="my-accordion-4" role="tabpanel">
@@ -72,30 +66,23 @@
 
             <b-card no-body class="mb-1">
               <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-button
-                  block
-                  v-b-toggle.accordion-5
-                  variant="info"
-                  class="d-flex justify-content-start"
-                >
-                  Sport
-                  <b-col class="d-flex justify-content-center">
-                    <b-badge pill variant="secondary">-</b-badge>
-                  </b-col>
-                  <b-col class="d-flex justify-content-end">
-                    <span class="h5">
-                      <b-icon icon="arrow-down-short"></b-icon>
-                    </span>
-                  </b-col>
+                <b-button block v-b-toggle.accordion-5 variant="info">
+                  <b-row>
+                    <b-col cols="7">
+                      Business
+                      <b-badge pill variant="warning" class="ml-1">2</b-badge>
+                    </b-col>
+                    <b-col cols="5">
+                      <span class="h5 mr-5">
+                        <b-icon icon="arrow-down-short" class="ml-5"></b-icon>
+                      </span>
+                    </b-col>
+                  </b-row>
                 </b-button>
               </b-card-header>
               <b-collapse id="accordion-5" accordion="my-accordion-5" role="tabpanel">
                 <b-card-body>
-                  <b-card-text>
-                    <div v-if="empty">
-                      <p>No article available</p>
-                    </div>
-                  </b-card-text>
+                  <b-card-text>text</b-card-text>
                 </b-card-body>
               </b-collapse>
             </b-card>
@@ -114,18 +101,18 @@ export default {
   data() {
     return {
       sxMenu: false,
-      empty: true
+      empty: true,
     };
   },
   methods: {
-    openClose: function() {
+    openClose: function () {
       if (this.sxMenu === false) {
         this.sxMenu = true;
       } else {
         this.sxMenu = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
