@@ -51,7 +51,7 @@
               <b-card-header header-tag="header" class="p-1" role="tab">
                 <b-button block v-b-toggle.accordion-2 variant="info">
                   Categories
-                  <b-badge pill variant="warning">2</b-badge>
+                  <b-badge pill variant="warning">{{ activeCategories.length }}</b-badge>
                   <span class="h5 ml-5">
                     <b-icon icon="arrow-down-short"></b-icon>
                   </span>
