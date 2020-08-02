@@ -18,25 +18,49 @@
       <b-row>
         <b-col>
           <div role="tablist">
-            <b-card no-body class="mb-1" v-for="category in activeCategories" v-bind:key="category">
+            <b-card
+              no-body
+              class="mb-1"
+              v-for="category in orderedCategories"
+              v-bind:key="category"
+            >
               <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-button block v-b-toggle.accordion-3 variant="info">
+                <b-button
+                  block
+                  v-b-toggle="'accordion-'+ category"
+                  variant="info"
+                  class="text-left"
+                >
                   <b-row>
-                    <b-col cols="7">
-                      {{ category }}
-                      <b-badge pill variant="warning" class="ml-1">2</b-badge>
+                    <b-col cols="3">
+                      <b-badge pill variant="warning" class="ml-1">{{ getCategoryCount(category) }}</b-badge>
                     </b-col>
-                    <b-col cols="5">
-                      <span class="h5 mr-5">
-                        <b-icon icon="arrow-down-short" class="ml-5"></b-icon>
-                      </span>
+                    <b-col cols="6">{{ category }}</b-col>
+                    <b-col cols="3">
+                      <b-icon icon="arrow-down-short" font-scale="1"></b-icon>
                     </b-col>
                   </b-row>
                 </b-button>
               </b-card-header>
-              <b-collapse id="accordion-3" accordion="my-accordion-3" role="tabpanel">
+              <b-collapse
+                :id="'accordion-'+ category"
+                :accordion="'accordion-'+ category"
+                role="tabpanel"
+              >
                 <b-card-body>
-                  <b-card-text>text</b-card-text>
+                  <b-card-text>
+                    accordion {{category}}
+                    <template
+                      v-for="article in getCategoryArticles(category)"
+                    >
+                      <RightMenuContent
+                        :key="article.url"
+                        v-bind:pictureUrl="article.pictureUrl"
+                        v-bind:title="article.title"
+                        v-bind:body="article.body"
+                      ></RightMenuContent>
+                    </template>
+                  </b-card-text>
                 </b-card-body>
               </b-collapse>
             </b-card>
@@ -48,16 +72,22 @@
 </template>
 
 <script>
+import RightMenuContent from "./RightMenuContent.vue";
+
 export default {
   name: "rightMenu",
-  components: {},
+  components: {
+    RightMenuContent,
+  },
   props: {
+    results: Array,
     activeCategories: Array,
   },
   data() {
     return {
       sxMenu: false,
       empty: true,
+      articlesCategory: [],
     };
   },
   methods: {
@@ -67,6 +97,48 @@ export default {
       } else {
         this.sxMenu = false;
       }
+    },
+    getCategoryCount: function (category) {
+      var section = this.results.find(
+        (section) => section.category === category
+      );
+      var count = section ? section.result.num_results : 0;
+      return count;
+    },
+    getCategoryArticles: function (category) {
+      var section = this.results.find(
+        (section) => section.category === category
+      );
+      if (!section) {
+        return [];
+      }
+
+      var articles = section.result.results;
+      articles = this._.orderBy(articles, "published_date", "desc");
+      articles = this._.take(articles, 2);
+      articles = articles.map((article) => {
+        var normalInfo = article.multimedia.find(
+          (m) => m.format === "Standard Thumbnail"
+        );
+        // this object "content" matches the vue-content format input props
+        var content = {
+          url: article.url,
+          pictureUrl: normalInfo ? normalInfo.url : "",
+          title: article.title,
+          body: this._.truncate(article.abstract, {
+            length: 50,
+            separator: " ",
+            omission: " [...]",
+          }),
+        };
+        return content;
+      });
+      return articles;
+    },
+  },
+  computed: {
+    orderedCategories: function () {
+      return this._.orderBy(this.activeCategories);
     },
   },
 };

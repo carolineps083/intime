@@ -102,7 +102,7 @@ export default {
   data() {
     return {
       sxMenu: false,
-      keywords: [],
+      keywords: this.$_loadKeywords(),
       categories: [
         "arts",
         "automobiles",
@@ -142,16 +142,27 @@ export default {
       }
 
       this.keywords = [...this.keywords, keyword];
+      this.$_saveKeywords();
     },
     selectKeyword: function (keyword) {
       this.$emit("keyword-toggled-event", keyword);
     },
     cancelKeyword: function (keyword) {
       this.keywords = this.keywords.filter((k) => k !== keyword);
+      this.$_saveKeywords();
     },
     isKeywordActive(keyword) {
       var isActive = this.activeKeywords.includes(keyword);
       return isActive;
+    },
+    // $_ convenzione di vue per indicare una funzione privata/interna, da non essere utilizzata dall'esterno
+    $_saveKeywords: function () {
+      localStorage.setItem("keywords", this.keywords);
+    },
+    $_loadKeywords: function () {
+      return localStorage.getItem("keywords")
+        ? localStorage.getItem("keywords").split(",")
+        : [];
     },
 
     onToggleCategory(category) {

@@ -14,7 +14,7 @@
 
       <b-col cols="6">
         <div class="d-flex justify-content-center">
-          <b-form-input v-model="search" placeholder="Search" class="mt-3"></b-form-input>
+          <b-form-input v-model="search" type="search" placeholder="Search" class="mt-3"></b-form-input>
           <b-button variant="light" class="h4 m-3" v-on:click="onSearch()">
             <b-icon icon="search"></b-icon>
           </b-button>
@@ -24,6 +24,8 @@
         </div>
 
         <div v-if="!firstTime">
+          Articles found: {{ this.articles.length }}
+          Active keywords: {{ this.activeKeywords.join(', ') }}
           <!-- for each article in all selected categories filtered by keywords -->
           <template v-for="article in articles">
             <Content
@@ -87,7 +89,7 @@
       </b-col>
 
       <b-col cols="3">
-        <rightMenu v-bind:activeCategories="activeCategories"></rightMenu>
+        <rightMenu v-bind:activeCategories="activeCategories" v-bind:results="results"></rightMenu>
       </b-col>
     </b-row>
   </b-container>
@@ -131,10 +133,7 @@ export default {
             "President Trump and his top aides sharply shifted their pandemic strategy in mid-April after seizing on optimistic data suggesting the virus would disappear, a Times investigation found.",
         },
       ],
-      // ternary operator =>> (condizione) ? se-vero : se-falso
-      activeCategories: localStorage.getItem("activeCategories")
-        ? localStorage.getItem("activeCategories").split(",")
-        : ["home"],
+      activeCategories: this.$_loadCategories(),
       activeKeywords: [],
       results: getFromApi(),
     };
@@ -160,12 +159,20 @@ export default {
         this.activeCategories = [...this.activeCategories, category];
       }
 
-      localStorage.setItem("activeCategories", this.activeCategories);
-
-      var xxxx = localStorage.getItem("activeCategories");
-      console.log(xxxx);
+      this.$_saveCategories();
 
       this.syncArticles();
+    },
+    $_saveCategories: function () {
+      localStorage.setItem("activeCategories", this.activeCategories);
+    },
+    $_loadCategories: function () {
+      var defaultCategories = ["home"];
+
+      // ternary operator =>> (condizione) ? se-vero : se-falso
+      return localStorage.getItem("activeCategories")
+        ? localStorage.getItem("activeCategories").split(",")
+        : defaultCategories;
     },
 
     onToggleKeyword: function (keyword) {
@@ -191,20 +198,24 @@ export default {
         .filter(
           // result => result.category === "arts" || result.category === "home"
           (result) => {
-            var xxx = result.category === "arts" || result.category === "home";
+            var xxx = this.activeCategories.includes(result.category);
             return xxx;
           }
         )
         .map((active) => {
+          // for-each active category, return just only the list of articles (results.result.results)
           var xxx = active.result.results;
           return xxx;
         })
         .map((articles) => {
+          // it comes NYT article-format, and it converts to a "vue-Content component" format
           var xxx = articles.map((article) => {
             var normalInfo = article.multimedia.find(
               (m) => m.format === "Normal"
             );
+            // this object "content" matches the vue-content format input props
             var content = {
+              url: article.url,
               pictureUrl: normalInfo ? normalInfo.url : "",
               title: article.title,
               body: article.abstract,
@@ -214,9 +225,25 @@ export default {
 
           return xxx;
         })
-        .flat(1);
+        .flat(1)
+        .filter((article) => {
+          if (this.activeKeywords.length === 0) {
+            return true;
+          }
 
-      console.log(this.articles);
+          var hasKeywords = this.activeKeywords.some((keyword) => {
+            var k = keyword.toLowerCase();
+
+            var included =
+              article.title.toLowerCase().includes(k) ||
+              article.body.toLowerCase().includes(k);
+
+            return included;
+          });
+          return hasKeywords;
+        });
+
+      // console.log(this.articles);
     },
   },
 };
