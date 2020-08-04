@@ -79,8 +79,11 @@
     </b-col>
     <b-col cols="2">
       <a href="#" v-on:click="openClose()">
-        <div class="h2 mb-0">
+        <div class="h2 mb-0" v-if="!sxMenu">
           <b-icon icon="chevron-double-right"></b-icon>
+        </div>
+        <div class="h2 mb-0" v-if="sxMenu">
+          <b-icon icon="chevron-double-left"></b-icon>
         </div>
       </a>
     </b-col>
