@@ -17,28 +17,32 @@
                   </span>
                 </b-button>
               </b-card-header>
-              <b-collapse visible id="accordion-1" accordion="my-accordion-1" role="tabpanel">
-                <b-card-body class="d-flex justify-content-start">
-                  <b-card-text v-for="keyword in keywords" v-bind:key="keyword">
-                    <b-button
-                      variant="outline-primary"
-                      v-bind:class="{ active: isKeywordActive(keyword) }"
-                      v-on:click="selectKeyword(keyword)"
-                      class="mr-1"
-                    >
-                      <b-button
-                        type="button"
-                        class="close"
-                        aria-label="Close"
-                        v-on:click.stop="cancelKeyword(keyword)"
-                      >
-                        <span aria-hidden="true">×</span>
-                      </b-button>
-                      {{ keyword }}
-                    </b-button>
-                  </b-card-text>
-                </b-card-body>
-              </b-collapse>
+              <b-row>
+                <b-col>
+                  <b-collapse visible id="accordion-1" accordion="my-accordion-1" role="tabpanel">
+                    <b-card-body class="d-flex flex-wrap d-flex justify-content-center">
+                      <b-card-text v-for="keyword in keywords" v-bind:key="keyword">
+                        <b-button
+                          variant="outline-primary"
+                          v-bind:class="{ active: isKeywordActive(keyword) }"
+                          v-on:click="selectKeyword(keyword)"
+                          class="mr-1"
+                        >
+                          <b-button
+                            type="button"
+                            class="close"
+                            aria-label="Close"
+                            v-on:click.stop="cancelKeyword(keyword)"
+                          >
+                            <span aria-hidden="true">×</span>
+                          </b-button>
+                          {{ keyword }}
+                        </b-button>
+                      </b-card-text>
+                    </b-card-body>
+                  </b-collapse>
+                </b-col>
+              </b-row>
             </b-card>
           </div>
         </b-col>
