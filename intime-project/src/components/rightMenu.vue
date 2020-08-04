@@ -58,6 +58,13 @@
                   <b-card-body>
                     <b-card-text>
                       accordion {{category}}
+                      
+                      <b-button
+                        block
+                        variant="info"
+                        v-on:click="showCategory(category)"
+                      >Show all</b-button>
+
                       <template
                         v-for="article in getCategoryArticles(category)"
                       >
@@ -67,6 +74,14 @@
                           v-bind:title="article.title"
                           v-bind:body="article.body"
                         ></RightMenuContent>
+
+                        <b-button
+                        :key="'seeMoreBtn_' + article.url"
+                        block
+                        variant="info"
+                        v-on:click="showArticle(category, article.url)"
+                      >See more</b-button>
+
                       </template>
                     </b-card-text>
                   </b-card-body>
@@ -108,6 +123,14 @@ export default {
       } else {
         this.isOpen = false;
       }
+    },
+    showCategory: function (category) {
+      console.log(category);
+      this.$emit("category-requested-event", category);
+    },
+    showArticle: function (category, url) {
+      console.log(url);
+      this.$emit("article-requested-event", category, url);
     },
     getCategoryCount: function (category) {
       var section = this.results.find(

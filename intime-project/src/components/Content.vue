@@ -10,6 +10,8 @@
       <b-col>
         <h3 class="headlines">{{ title }}</h3>
         <p>{{ body }}</p>
+
+        <a :href="url" target="_new">Read the full article</a>
       </b-col>
     </b-row>
   </div>
@@ -21,6 +23,7 @@ export default {
   components: {},
   props: {
     // TODO: vedere se è meglio passare un oggetto
+    url: String,
     pictureUrl: String,
     title: String,
     body: String

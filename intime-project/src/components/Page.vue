@@ -30,6 +30,7 @@
           <template v-for="article in articles">
             <Content
               :key="article.url"
+              v-bind:url="article.url"
               v-bind:pictureUrl="article.pictureUrl"
               v-bind:title="article.title"
               v-bind:body="article.body"
@@ -89,7 +90,12 @@
       </b-col>
 
       <b-col cols="3">
-        <rightMenu v-bind:activeCategories="activeCategories" v-bind:results="results"></rightMenu>
+        <rightMenu 
+        v-bind:activeCategories="activeCategories" 
+        v-bind:results="results"
+        v-on:category-requested-event="onShowCategory"
+        v-on:article-requested-event="onShowArticle"
+        ></rightMenu>
       </b-col>
     </b-row>
   </b-container>
@@ -115,24 +121,7 @@ export default {
       search: "",
       firstTime: false,
       steps: 0,
-      articles: [
-        {
-          pictureUrl:
-            "https://static01.nyt.com/images/2020/07/18/us/politics/18dc-virus-reconstruct1/18dc-virus-reconstruct1-thumbStandard.jpg",
-          title:
-            "Inside Trump’s Failure: The Rush to Abandon Leadership Role on the Virus",
-          body:
-            "The roots of the nation’s current inability to control the pandemic can be traced to mid-April, when the White House embraced overly rosy projections to proclaim victory and move on.",
-        },
-        {
-          pictureUrl:
-            "https://static01.nyt.com/images/2020/07/18/us/politics/18dc-virus-takeaways/18dc-virus-takeaways-thumbLarge.jpg",
-          title:
-            "Inside the Failure: 5 Takeaways on Trump’s Effort to Shift Responsibility",
-          body:
-            "President Trump and his top aides sharply shifted their pandemic strategy in mid-April after seizing on optimistic data suggesting the virus would disappear, a Times investigation found.",
-        },
-      ],
+      articles: [],
       activeCategories: this.$_loadCategories(),
       activeKeywords: [],
       results: getFromApi(),
@@ -141,6 +130,31 @@ export default {
   methods: {
     onSearch: function () {
       // TODO: current text is in >> this.search
+
+      var searchText = this.search.toLowerCase().trim();
+      if(!searchText) {
+        return;
+      }
+
+      var articles = this.results
+        .map((section) => section.result.results)
+        .flat(1)
+        .map((article) => {
+          // it comes NYT article-format, and it converts to a "vue-Content component" format
+          var content = mapToContent(article);
+          return content;
+        })
+        .filter((article) => {
+          var hasSearchText = 
+              article.title.toLowerCase().includes(searchText) ||
+              article.body.toLowerCase().includes(searchText);
+
+            return hasSearchText;
+          });
+
+      articles = this._.uniqBy(articles, 'url');
+
+      this.articles = articles;
     },
 
     onSaveKeyword: function () {
@@ -174,6 +188,46 @@ export default {
         ? localStorage.getItem("activeCategories").split(",")
         : defaultCategories;
     },
+    onShowCategory: function (category) {
+      var section = this.results.find(
+        (section) => section.category === category
+      );
+      if (!section) {
+        return [];
+      }
+
+      var articles = section.result.results;
+      articles = this._.orderBy(articles, "published_date", "desc");
+      articles = articles.map((article) => {
+        var content = mapToContent(article);
+        return content;
+      });
+      this.articles = articles;
+    },
+    onShowArticle: function (category, url) {
+      var section = this.results.find(
+        (section) => section.category === category
+      );
+      if (!section) {
+        return [];
+      }
+
+      var articles = section.result.results;
+      var article = articles.find(x => x.url === url);
+      if(!article) {
+        this.articles = [{
+          url: '',
+          pictureUrl: '',
+          title: 'Error',
+          body: 'Not found',
+        }];
+        return;
+      }
+
+      this.articles = [
+        mapToContent(article)
+      ];
+    },
 
     onToggleKeyword: function (keyword) {
       var wasActive = this.activeKeywords.includes(keyword);
@@ -193,8 +247,8 @@ export default {
     syncArticles: function () {
       // qui devo popolare l'array degli articoli da visualizzare nella pagina centrale
       // in base alle categorie selezionate e alle keywords attive
-      this.articles = [];
-      this.articles = this.results
+      
+      var articles = this.results
         .filter(
           // result => result.category === "arts" || result.category === "home"
           (result) => {
@@ -207,25 +261,12 @@ export default {
           var xxx = active.result.results;
           return xxx;
         })
-        .map((articles) => {
-          // it comes NYT article-format, and it converts to a "vue-Content component" format
-          var xxx = articles.map((article) => {
-            var normalInfo = article.multimedia.find(
-              (m) => m.format === "Normal"
-            );
-            // this object "content" matches the vue-content format input props
-            var content = {
-              url: article.url,
-              pictureUrl: normalInfo ? normalInfo.url : "",
-              title: article.title,
-              body: article.abstract,
-            };
-            return content;
-          });
-
-          return xxx;
-        })
         .flat(1)
+        .map((article) => {
+          // it comes NYT article-format, and it converts to a "vue-Content component" format
+            var content = mapToContent(article);
+            return content;
+        })
         .filter((article) => {
           if (this.activeKeywords.length === 0) {
             return true;
@@ -243,10 +284,25 @@ export default {
           return hasKeywords;
         });
 
-      // console.log(this.articles);
+      articles = this._.uniqBy(articles, 'url');
+
+      this.articles = articles;
     },
   },
 };
+
+function mapToContent(article) {
+  var normalInfo = article.multimedia.find(
+              (m) => m.format === "Normal"
+            );
+  var content = {
+    url: article.url,
+    pictureUrl: normalInfo ? normalInfo.url : "",
+    title: article.title,
+    body: article.abstract,
+  };
+  return content;
+}
 
 function getFromApi() {
   var homeObjectFromApi = {
