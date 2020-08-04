@@ -1,5 +1,6 @@
 <template>
   <b-row>
+    <b-col cols="10" v-if="!sxMenu"></b-col>
     <b-col cols="2" class>
       <a href="#" v-on:click="openClose()">
         <div class="h2 mb-0" v-if="sxMenu">

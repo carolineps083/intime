@@ -41,7 +41,7 @@
                             <span aria-hidden="true">×</span>
                           </b-button>
                           {{ keyword }}
-                        </b-button>
+                        </b-button>                  
                       </b-card-text>
                     </b-card-body>
                   </b-collapse>
