@@ -10,11 +10,15 @@
             <b-card no-body class="mb-1">
               <b-card-header header-tag="header" class="p-1" role="tab">
                 <b-button block v-b-toggle.accordion-1 variant="info">
-                  Keywords
-                  <b-badge pill variant="warning">{{ keywords.length }}</b-badge>
-                  <span class="h5 ml-5">
-                    <b-icon icon="arrow-down-short"></b-icon>
-                  </span>
+                  <b-row>
+                    <b-col cols="3">
+                      <b-badge pill variant="warning" class="ml-1">{{ keywords.length }}</b-badge>
+                    </b-col>
+                    <b-col cols="6">Keywords</b-col>
+                    <b-col cols="3">
+                      <b-icon icon="arrow-down-short" font-scale="1"></b-icon>
+                    </b-col>
+                  </b-row>
                 </b-button>
               </b-card-header>
               <b-row>
@@ -54,11 +58,15 @@
             <b-card no-body class="mb-1">
               <b-card-header header-tag="header" class="p-1" role="tab">
                 <b-button block v-b-toggle.accordion-2 variant="info">
-                  Categories
-                  <b-badge pill variant="warning">{{ activeCategories.length }}</b-badge>
-                  <span class="h5 ml-5">
-                    <b-icon icon="arrow-down-short"></b-icon>
-                  </span>
+                  <b-row>
+                    <b-col cols="3">
+                      <b-badge pill variant="warning">{{ activeCategories.length }}</b-badge>
+                    </b-col>
+                    <b-col cols="6">Categories</b-col>
+                    <b-col cols="3">
+                      <b-icon icon="arrow-down-short" font-scale="1"></b-icon>
+                    </b-col>
+                  </b-row>
                 </b-button>
               </b-card-header>
               <b-collapse visible id="accordion-2" accordion="my-accordion-2" role="tabpanel">
