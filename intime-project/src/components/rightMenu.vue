@@ -59,7 +59,7 @@
                     <b-card-text>
                       accordion {{category}}
                       
-                      <b-button
+                      <b-button v-if="getCategoryCount(category) > 0"
                         block
                         variant="info"
                         v-on:click="showCategory(category)"
