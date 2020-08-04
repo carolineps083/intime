@@ -1,6 +1,6 @@
 <template>
   <b-row>
-    <b-col cols="10" v-if="sxMenu">
+    <b-col cols="10" v-if="isOpen">
       <div class="p-5">
         <h2 class="settings mt-2">Your settings</h2>
       </div>
@@ -25,6 +25,11 @@
                 <b-col>
                   <b-collapse visible id="accordion-1" accordion="my-accordion-1" role="tabpanel">
                     <b-card-body class="d-flex flex-wrap d-flex justify-content-center">
+
+                      <b-card-text v-if="keywords.length == 0">
+                        No keywords saved
+                      </b-card-text>
+
                       <b-card-text v-for="keyword in keywords" v-bind:key="keyword">
                         <b-button
                           variant="outline-primary"
@@ -90,25 +95,20 @@
       </b-row>
     </b-col>
     <b-col cols="2">
-      <a href="#" v-on:click="openClose()">
-        <div class="h2 mb-0" v-if="!sxMenu">
-          <b-icon icon="chevron-double-right"></b-icon>
-        </div>
-        <div class="h2 mb-0" v-if="sxMenu">
-          <b-icon icon="chevron-double-left"></b-icon>
-        </div>
-      </a>
+       <WidgetToggler v-bind:isRight="!isOpen" v-on:click.native="openClose()"></WidgetToggler>
     </b-col>
   </b-row>
 </template>
 
 <script>
 import Toggle from "./Toggle.vue";
+import WidgetToggler from "./WidgetToggler.vue";
 
 export default {
   name: "leftMenu",
   components: {
     Toggle,
+    WidgetToggler,
   },
   props: {
     activeCategories: Array,
@@ -116,7 +116,7 @@ export default {
   },
   data() {
     return {
-      sxMenu: false,
+      isOpen: false,
       keywords: this.$_loadKeywords(),
       categories: [
         "arts",
@@ -189,10 +189,10 @@ export default {
     },
 
     openClose: function () {
-      if (this.sxMenu === false) {
-        this.sxMenu = true;
+      if (this.isOpen === false) {
+        this.isOpen = true;
       } else {
-        this.sxMenu = false;
+        this.isOpen = false;
       }
     },
   },
