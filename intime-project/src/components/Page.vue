@@ -24,7 +24,7 @@
           </b-button>
         </div>
 
-        <template v-if="!firstTime">
+        <template v-if="wizardComplete">
           <b-row>
             <b-col class="d-flex justify-content-center">
               <p class="infoArticles">
@@ -62,7 +62,7 @@
           <!-- end for -->
         </template>
 
-        <template v-if="firstTime">
+        <template v-if="!wizardComplete">
           <b-row class="d-flex justify-content-center">
             <b-col>
               <h4 class="text-center mt-5">Welcome to In.time!</h4>
@@ -325,7 +325,7 @@ export default {
         "world",
       ],
       search: "",
-      firstTime: true,
+      wizardComplete: this.$_getFirstTimeInfo(),
       steps: 0,
       articles: [],
       activeCategories: this.$_loadCategories(),
@@ -372,6 +372,11 @@ export default {
     },
     changeFirstTime: function () {
       this.firstTime = !this.firstTime;
+    },
+    $_getFirstTimeInfo: function () {
+      return localStorage.getItem("wizardComplete")
+        ? localStorage.setItem("wizardComplete", true)
+        : localStorage.setItem("wizardComplete", false);
     },
 
     $_getCategoryFromApi: function (category) {
@@ -441,117 +446,114 @@ export default {
 
       this.syncArticles();
     },
-    $_saveCategories: function () {
-      localStorage.setItem("activeCategories", this.activeCategories);
-    },
-    $_loadCategories: function () {
-      var defaultCategories = ["home"];
+  },
 
-      // ternary operator =>> (condizione) ? se-vero : se-falso
-      return localStorage.getItem("activeCategories")
-        ? localStorage.getItem("activeCategories").split(",")
-        : defaultCategories;
-    },
-    onShowCategory: function (category) {
-      var section = this.results.find(
-        (section) => section.category === category
+  $_saveCategories: function () {
+    localStorage.setItem("activeCategories", this.activeCategories);
+  },
+  $_loadCategories: function () {
+    var defaultCategories = ["home"];
+
+    // ternary operator =>> (condizione) ? se-vero : se-falso
+    return localStorage.getItem("activeCategories")
+      ? localStorage.getItem("activeCategories").split(",")
+      : defaultCategories;
+  },
+  onShowCategory: function (category) {
+    var section = this.results.find((section) => section.category === category);
+    if (!section) {
+      return [];
+    }
+
+    var articles = section.result.results;
+    articles = this._.orderBy(articles, "published_date", "desc");
+    articles = articles.map((article) => {
+      var content = mapToContent(article);
+      return content;
+    });
+    this.articles = articles;
+  },
+  onShowArticle: function (category, url) {
+    var section = this.results.find((section) => section.category === category);
+    if (!section) {
+      return [];
+    }
+
+    var articles = section.result.results;
+    var article = articles.find((x) => x.url === url);
+    if (!article) {
+      this.articles = [
+        {
+          url: "",
+          pictureUrl: "",
+          title: "Error",
+          body: "Not found",
+        },
+      ];
+      return;
+    }
+
+    this.articles = [mapToContent(article)];
+  },
+
+  onToggleKeyword: function (keyword) {
+    var wasActive = this.activeKeywords.includes(keyword);
+    if (wasActive) {
+      // then it should be removed
+      this.activeKeywords = this.activeKeywords.filter(
+        (activeKeyword) => activeKeyword !== keyword
       );
-      if (!section) {
-        return [];
-      }
+    } else {
+      // we can add it
+      this.activeKeywords = [...this.activeKeywords, keyword];
+    }
 
-      var articles = section.result.results;
-      articles = this._.orderBy(articles, "published_date", "desc");
-      articles = articles.map((article) => {
+    this.syncArticles();
+  },
+
+  syncArticles: function () {
+    // qui devo popolare l'array degli articoli da visualizzare nella pagina centrale
+    // in base alle categorie selezionate e alle keywords attive
+
+    var articles = this.results
+      .filter(
+        // result => result.category === "arts" || result.category === "home"
+        (result) => {
+          var xxx = this.activeCategories.includes(result.category);
+          return xxx;
+        }
+      )
+      .map((active) => {
+        // for-each active category, return just only the list of articles (results.result.results)
+        var xxx = active.result.results;
+        return xxx;
+      })
+      .flat(1)
+      .map((article) => {
+        // it comes NYT article-format, and it converts to a "vue-Content component" format
         var content = mapToContent(article);
         return content;
-      });
-      this.articles = articles;
-    },
-    onShowArticle: function (category, url) {
-      var section = this.results.find(
-        (section) => section.category === category
-      );
-      if (!section) {
-        return [];
-      }
+      })
+      .filter((article) => {
+        if (this.activeKeywords.length === 0) {
+          return true;
+        }
 
-      var articles = section.result.results;
-      var article = articles.find((x) => x.url === url);
-      if (!article) {
-        this.articles = [
-          {
-            url: "",
-            pictureUrl: "",
-            title: "Error",
-            body: "Not found",
-          },
-        ];
-        return;
-      }
+        var hasKeywords = this.activeKeywords.some((keyword) => {
+          var k = keyword.toLowerCase();
 
-      this.articles = [mapToContent(article)];
-    },
+          var included =
+            article.title.toLowerCase().includes(k) ||
+            article.body.toLowerCase().includes(k);
 
-    onToggleKeyword: function (keyword) {
-      var wasActive = this.activeKeywords.includes(keyword);
-      if (wasActive) {
-        // then it should be removed
-        this.activeKeywords = this.activeKeywords.filter(
-          (activeKeyword) => activeKeyword !== keyword
-        );
-      } else {
-        // we can add it
-        this.activeKeywords = [...this.activeKeywords, keyword];
-      }
-
-      this.syncArticles();
-    },
-
-    syncArticles: function () {
-      // qui devo popolare l'array degli articoli da visualizzare nella pagina centrale
-      // in base alle categorie selezionate e alle keywords attive
-
-      var articles = this.results
-        .filter(
-          // result => result.category === "arts" || result.category === "home"
-          (result) => {
-            var xxx = this.activeCategories.includes(result.category);
-            return xxx;
-          }
-        )
-        .map((active) => {
-          // for-each active category, return just only the list of articles (results.result.results)
-          var xxx = active.result.results;
-          return xxx;
-        })
-        .flat(1)
-        .map((article) => {
-          // it comes NYT article-format, and it converts to a "vue-Content component" format
-          var content = mapToContent(article);
-          return content;
-        })
-        .filter((article) => {
-          if (this.activeKeywords.length === 0) {
-            return true;
-          }
-
-          var hasKeywords = this.activeKeywords.some((keyword) => {
-            var k = keyword.toLowerCase();
-
-            var included =
-              article.title.toLowerCase().includes(k) ||
-              article.body.toLowerCase().includes(k);
-
-            return included;
-          });
-          return hasKeywords;
+          return included;
         });
+        return hasKeywords;
+      });
 
-      articles = this._.uniqBy(articles, "url");
+    articles = this._.uniqBy(articles, "url");
 
-      this.articles = articles;
-    },
+    this.articles = articles;
   },
 };
 
