@@ -13,7 +13,7 @@
       </b-col>
       <b-col cols="10">
         <div class="p-5">
-          <h2 class="settings text-center mb-5">Your Feed</h2>
+          <h2 class="settings text-center mb-5">Your feed</h2>
           <b-row class="justify-content-center">
             <b-button variant="outline-primary">Show all</b-button>
           </b-row>
@@ -57,17 +57,14 @@
                 >
                   <b-card-body>
                     <b-card-text>
-                      accordion {{category}}
-                      
-                      <b-button v-if="getCategoryCount(category) > 0"
+                      <b-button
+                        v-if="getCategoryCount(category) > 0"
                         block
                         variant="info"
                         v-on:click="showCategory(category)"
-                      >Show all</b-button>
+                      >See all articles</b-button>
 
-                      <template
-                        v-for="article in getCategoryArticles(category)"
-                      >
+                      <template v-for="article in getCategoryArticles(category)">
                         <RightMenuContent
                           :key="article.url"
                           v-bind:pictureUrl="article.pictureUrl"
@@ -76,12 +73,11 @@
                         ></RightMenuContent>
 
                         <b-button
-                        :key="'seeMoreBtn_' + article.url"
-                        block
-                        variant="info"
-                        v-on:click="showArticle(category, article.url)"
-                      >See more</b-button>
-
+                          :key="'seeMoreBtn_' + article.url"
+                          block
+                          variant="info"
+                          v-on:click="showArticle(category, article.url)"
+                        >See more</b-button>
                       </template>
                     </b-card-text>
                   </b-card-body>

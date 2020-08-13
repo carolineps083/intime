@@ -114,7 +114,7 @@ export default {
   },
   data() {
     return {
-      sxMenu: false,
+      sxMenu: true,
       keywords: [],
       categories: [
         "arts",
@@ -165,11 +165,7 @@ export default {
       return category == category;
     },
     openClose: function () {
-      if (this.sxMenu === false) {
-        this.sxMenu = true;
-      } else {
-        this.sxMenu = false;
-      }
+      sxMenu = !sxMenu;
     },
   },
 };
