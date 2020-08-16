@@ -24,7 +24,7 @@
           </b-button>
         </div>
 
-        <template v-if="wizardComplete">
+        <template v-if="wizardCompleted">
           <b-row>
             <b-col class="d-flex justify-content-center">
               <p class="infoArticles">
@@ -62,14 +62,14 @@
           <!-- end for -->
         </template>
 
-        <template v-if="!wizardComplete">
+        <template v-if="!wizardCompleted">
           <b-row class="d-flex justify-content-center">
             <b-col>
               <h4 class="text-center mt-5">Welcome to In.time!</h4>
-              <div v-if="steps === 0">
+              <div v-if="wizardCurrentStep === WizardSteps.welcome">
                 <div class="boxParagraph">
                   <span class="d-flex justify-content-center m-4">
-                    <p class="stepsText"></p>
+                    <p class="wizardCurrentStepText"></p>
                   </span>
                   <p class="text-justify">
                     This is the new NYT platform that makes it easier than
@@ -95,10 +95,10 @@
                 </div>
               </div>
 
-              <div v-if="steps === 1">
+              <div v-if="wizardCurrentStep === WizardSteps.step1">
                 <div class="boxParagraph">
                   <span class="d-flex justify-content-center m-4">
-                    <p class="stepsText">Step 1</p>
+                    <p class="wizardCurrentStepText">Step 1</p>
                   </span>
                   <p>
                     The main feautures of this new portal is the option
@@ -132,10 +132,10 @@
                 </div>
               </div>
 
-              <div v-if="steps === 2">
+              <div v-if="wizardCurrentStep === WizardSteps.step2">
                 <div class="boxParagraph">
                   <span class="d-flex justify-content-center m-4">
-                    <p class="stepsText">Step 2</p>
+                    <p class="wizardCurrentStepText">Step 2</p>
                   </span>
                   <p>
                     On the left menu, under the "Keywords" panel, you can see a panel
@@ -166,10 +166,10 @@
                 </div>
               </div>
 
-              <div v-if="steps === 3">
+              <div v-if="wizardCurrentStep === WizardSteps.step3">
                 <div class="boxParagraph">
                   <span class="d-flex justify-content-center m-4">
-                    <p class="stepsText">Step 3</p>
+                    <p class="wizardCurrentStepText">Step 3</p>
                   </span>
                   <p>
                     The right menu, called
@@ -199,10 +199,10 @@
                 </div>
               </div>
 
-              <div v-if="steps === 4">
+              <div v-if="wizardCurrentStep === WizardSteps.lastStep">
                 <div class="boxParagraph">
                   <span class="d-flex justify-content-center m-4">
-                    <p class="stepsText">Step 4</p>
+                    <p class="wizardCurrentStepText">Step 4</p>
                   </span>
                   <p>
                     Lastly,
@@ -236,32 +236,34 @@
           </b-row>
 
           <!-- row of buttons -->
-          <b-row v-if="steps == 0">
+          <b-row v-if="wizardCurrentStep == WizardSteps.welcome">
             <b-col cols="6" class="d-flex justify-content-end">
-              <b-button pill v-on:click="changeFirstTime()">Skip Tutorial</b-button>
+              <b-button pill v-on:click="setWizardDone()">Skip Tutorial</b-button>
             </b-col>
             <b-col cols="6" class="d-flex justify-content-start">
-              <b-button pill variant="primary" v-on:click="steps++">Start Tutorial</b-button>
+              <b-button pill variant="primary" v-on:click="wizardNextStep()">Start Tutorial</b-button>
             </b-col>
           </b-row>
 
-          <b-row v-if="steps > 0 && steps < 4">
+          <b-row
+            v-if="wizardCurrentStep > WizardSteps.welcome && wizardCurrentStep < WizardSteps.lastStep"
+          >
             <b-col cols="6" class="d-flex justify-content-end">
-              <b-button v-on:click="steps--" pill>Back</b-button>
+              <b-button v-on:click="wizardPreviousStep()" pill>Back</b-button>
             </b-col>
 
             <b-col cols="6" class="d-flex justify-content-start">
-              <b-button pill variant="primary" v-on:click="steps++">Next</b-button>
+              <b-button pill variant="primary" v-on:click="wizardNextStep()">Next</b-button>
             </b-col>
           </b-row>
 
-          <b-row v-if="steps == 4">
+          <b-row v-if="wizardCurrentStep == WizardSteps.lastStep">
             <b-col cols="6" class="d-flex justify-content-end">
-              <b-button pill v-on:click="steps--">Back</b-button>
+              <b-button pill v-on:click="wizardPreviousStep()">Back</b-button>
             </b-col>
 
             <b-col cols="6" class="d-flex justify-content-start">
-              <b-button pill variant="primary" v-on:click="changeFirstTime()">End tutorial</b-button>
+              <b-button pill variant="primary" v-on:click="setWizardDone()">End tutorial</b-button>
             </b-col>
           </b-row>
         </template>
@@ -285,6 +287,15 @@ import rightMenu from "./rightMenu.vue";
 import Header from "./Header.vue";
 import Content from "./Content.vue";
 
+// ENUM
+const WizardSteps = {
+  welcome: 0,
+  step1: 1,
+  step2: 2,
+  step3: 3,
+  lastStep: 4,
+};
+
 export default {
   name: "Page",
   components: {
@@ -296,6 +307,10 @@ export default {
   props: {},
   data() {
     return {
+      // enums
+      WizardSteps,
+
+      // bindings
       categories: [
         "arts",
         "automobiles",
@@ -325,8 +340,8 @@ export default {
         "world",
       ],
       search: "",
-      wizardComplete: this.$_getFirstTimeInfo(),
-      steps: 0,
+      wizardCompleted: this.$_getWizardCompleted(),
+      wizardCurrentStep: 0,
       articles: [],
       activeCategories: this.$_loadCategories(),
       activeKeywords: [],
@@ -370,14 +385,6 @@ export default {
           console.log(error);
         });
     },
-    changeFirstTime: function () {
-      this.firstTime = !this.firstTime;
-    },
-    $_getFirstTimeInfo: function () {
-      return localStorage.getItem("wizardComplete")
-        ? localStorage.setItem("wizardComplete", true)
-        : localStorage.setItem("wizardComplete", false);
-    },
 
     $_getCategoryFromApi: function (category) {
       var token = "u2Lz2DGGlSDP6sQyn7gDFrAG7yVGwQKO";
@@ -386,6 +393,28 @@ export default {
       const promise = this.axios.get(url);
       return promise;
     },
+
+    $_getWizardCompleted: function () {
+      var ls = localStorage.getItem("wizardCompleted");
+      if (ls === null) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+
+    setWizardDone: function () {
+      this.wizardCompleted = true;
+      localStorage.setItem("wizardCompleted", true);
+    },
+
+    wizardNextStep: function () {
+      this.wizardCurrentStep++;
+    },
+    wizardPreviousStep: function () {
+      this.wizardCurrentStep--;
+    },
+
     onSearch: function () {
       // current text is in >> this.search
 
@@ -446,114 +475,119 @@ export default {
 
       this.syncArticles();
     },
-  },
 
-  $_saveCategories: function () {
-    localStorage.setItem("activeCategories", this.activeCategories);
-  },
-  $_loadCategories: function () {
-    var defaultCategories = ["home"];
+    $_saveCategories: function () {
+      localStorage.setItem("activeCategories", this.activeCategories);
+    },
+    $_loadCategories: function () {
+      var defaultCategories = ["home"];
 
-    // ternary operator =>> (condizione) ? se-vero : se-falso
-    return localStorage.getItem("activeCategories")
-      ? localStorage.getItem("activeCategories").split(",")
-      : defaultCategories;
-  },
-  onShowCategory: function (category) {
-    var section = this.results.find((section) => section.category === category);
-    if (!section) {
-      return [];
-    }
+      // ternary operator =>> (condizione) ? se-vero : se-falso
+      return localStorage.getItem("activeCategories")
+        ? localStorage.getItem("activeCategories").split(",")
+        : defaultCategories;
+    },
 
-    var articles = section.result.results;
-    articles = this._.orderBy(articles, "published_date", "desc");
-    articles = articles.map((article) => {
-      var content = mapToContent(article);
-      return content;
-    });
-    this.articles = articles;
-  },
-  onShowArticle: function (category, url) {
-    var section = this.results.find((section) => section.category === category);
-    if (!section) {
-      return [];
-    }
-
-    var articles = section.result.results;
-    var article = articles.find((x) => x.url === url);
-    if (!article) {
-      this.articles = [
-        {
-          url: "",
-          pictureUrl: "",
-          title: "Error",
-          body: "Not found",
-        },
-      ];
-      return;
-    }
-
-    this.articles = [mapToContent(article)];
-  },
-
-  onToggleKeyword: function (keyword) {
-    var wasActive = this.activeKeywords.includes(keyword);
-    if (wasActive) {
-      // then it should be removed
-      this.activeKeywords = this.activeKeywords.filter(
-        (activeKeyword) => activeKeyword !== keyword
+    onShowCategory: function (category) {
+      var section = this.results.find(
+        (section) => section.category === category
       );
-    } else {
-      // we can add it
-      this.activeKeywords = [...this.activeKeywords, keyword];
-    }
+      if (!section) {
+        return [];
+      }
 
-    this.syncArticles();
-  },
-
-  syncArticles: function () {
-    // qui devo popolare l'array degli articoli da visualizzare nella pagina centrale
-    // in base alle categorie selezionate e alle keywords attive
-
-    var articles = this.results
-      .filter(
-        // result => result.category === "arts" || result.category === "home"
-        (result) => {
-          var xxx = this.activeCategories.includes(result.category);
-          return xxx;
-        }
-      )
-      .map((active) => {
-        // for-each active category, return just only the list of articles (results.result.results)
-        var xxx = active.result.results;
-        return xxx;
-      })
-      .flat(1)
-      .map((article) => {
-        // it comes NYT article-format, and it converts to a "vue-Content component" format
+      var articles = section.result.results;
+      articles = this._.orderBy(articles, "published_date", "desc");
+      articles = articles.map((article) => {
         var content = mapToContent(article);
         return content;
-      })
-      .filter((article) => {
-        if (this.activeKeywords.length === 0) {
-          return true;
-        }
-
-        var hasKeywords = this.activeKeywords.some((keyword) => {
-          var k = keyword.toLowerCase();
-
-          var included =
-            article.title.toLowerCase().includes(k) ||
-            article.body.toLowerCase().includes(k);
-
-          return included;
-        });
-        return hasKeywords;
       });
+      this.articles = articles;
+    },
+    onShowArticle: function (category, url) {
+      var section = this.results.find(
+        (section) => section.category === category
+      );
+      if (!section) {
+        return [];
+      }
 
-    articles = this._.uniqBy(articles, "url");
+      var articles = section.result.results;
+      var article = articles.find((x) => x.url === url);
+      if (!article) {
+        this.articles = [
+          {
+            url: "",
+            pictureUrl: "",
+            title: "Error",
+            body: "Not found",
+          },
+        ];
+        return;
+      }
 
-    this.articles = articles;
+      this.articles = [mapToContent(article)];
+    },
+
+    onToggleKeyword: function (keyword) {
+      var wasActive = this.activeKeywords.includes(keyword);
+      if (wasActive) {
+        // then it should be removed
+        this.activeKeywords = this.activeKeywords.filter(
+          (activeKeyword) => activeKeyword !== keyword
+        );
+      } else {
+        // we can add it
+        this.activeKeywords = [...this.activeKeywords, keyword];
+      }
+
+      this.syncArticles();
+    },
+
+    syncArticles: function () {
+      // qui devo popolare l'array degli articoli da visualizzare nella pagina centrale
+      // in base alle categorie selezionate e alle keywords attive
+
+      var articles = this.results
+        .filter(
+          // result => result.category === "arts" || result.category === "home"
+          (result) => {
+            var xxx = this.activeCategories.includes(result.category);
+            return xxx;
+          }
+        )
+        .map((active) => {
+          // for-each active category, return just only the list of articles (results.result.results)
+          var xxx = active.result.results;
+          return xxx;
+        })
+        .flat(1)
+        .map((article) => {
+          // it comes NYT article-format, and it converts to a "vue-Content component" format
+          var content = mapToContent(article);
+          return content;
+        })
+        .filter((article) => {
+          if (this.activeKeywords.length === 0) {
+            return true;
+          }
+
+          var hasKeywords = this.activeKeywords.some((keyword) => {
+            var k = keyword.toLowerCase();
+
+            var included =
+              article.title.toLowerCase().includes(k) ||
+              article.body.toLowerCase().includes(k);
+
+            return included;
+          });
+          return hasKeywords;
+        });
+
+      articles = this._.uniqBy(articles, "url");
+
+      this.articles = articles;
+    },
   },
 };
 
@@ -594,7 +628,7 @@ function mapToContent(article) {
   height: 200px;
   text-align: justify;
 }
-.stepsText {
+.wizardCurrentStepText {
   font-weight: bold;
   color: rgb(66, 162, 226);
 }
