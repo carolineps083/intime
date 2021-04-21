@@ -1,6 +1,6 @@
 # In-Time - A reading platform
 
-![newyork](/Portfolio/Images/newyork.png)
+![newyork](https://dxxbxu0f802py.cloudfront.net/wp-content/uploads/2019/12/11091722/new-york-times-logo-png-vertical.png)
 
 I realized my In-Time project one year ago, before I started my UX Design course. 
 I learned HTML, CSS and VUE.js and wanted to apply my knowleadge in a practical project. 
