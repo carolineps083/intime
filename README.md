@@ -11,4 +11,4 @@ as I mostly wanted to apply my front-end skills and just make a functioning webs
 
 You can see the working final results here http://intime.stellarsolutions.it/#
 
-This is the code behind it: ojkldsfa
+Here instead you can see the specifics of how it was realized. [in-time](/in-time) 
