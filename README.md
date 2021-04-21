@@ -5,7 +5,7 @@
 I realized my In-Time project one year ago, before I started my UX Design course. 
 I learned HTML, CSS and VUE.js and wanted to apply my knowleadge in a practical project. 
 
-I realized a simple website that, using a free API from the New York Times, allows people to 
+I realized a simple website that, using a free API from The New York Times, allows people to 
 search for articles and save them as favourites. 
 
 At the time I didn't have any design knowleadge and honestly didn't focus much on the website design
