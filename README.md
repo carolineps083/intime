@@ -8,8 +8,7 @@ I learned HTML, CSS and VUE.js and wanted to apply my knowleadge in a practical 
 I realized a simple website that, using a free API from The New York Times, allows people to 
 search for articles and save them as favourites. 
 
-At the time I didn't have any design knowleadge and honestly didn't focus much on the website design
-as I mostly wanted to apply my front-end skills and just make a functioning website.
+This hobby-project was mainly focused on the technical aspects of frontend, and not the UX Design.
 
 You can see the working final results here http://intime.stellarsolutions.it/#
 
