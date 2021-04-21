@@ -10,6 +10,9 @@ search for articles and save them as favourites.
 
 This hobby-project was mainly focused on the technical aspects of frontend, and not the UX Design.
 
-You can see the working final results here http://intime.stellarsolutions.it/#
+You can see the working final results deployed here http://intime.stellarsolutions.it/
 
-Here instead you can see the specifics of how it was realized: [intime-project](/intime-project) 
+Here instead you can see the specifics of the source code realized with HTML, Css, Javascript,
+Bootstrap and Vue.js.
+
+[intime-project](/intime-project) 
