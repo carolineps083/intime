@@ -607,6 +607,7 @@ function mapToContent(article) {
 }
 </script>
 
+
 <style scoped lang="scss">
 .mt-3 {
   width: 300px;
